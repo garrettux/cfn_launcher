@@ -24,6 +24,7 @@ YAML Config File Format Example:
     parametersfilepath: $HOME/.cfnl/uswest2/client1/account1/dev/webapp1.json
     capabilityiam: false
     capabilitynamediam: false
+    capabilityautoexpand: false
     deletecreatefailures: true
     uses3template: true
     nolog: false
@@ -180,6 +181,7 @@ function show_header {
         message "PARAMETERS FILE: $yaml_parametersfilepath"
         message "CAPABILITY IAM: $yaml_capabilityiam"
         message "CAPABILITY NAMED IAM: $yaml_capabilitynamediam"
+        message "CAPABILITY AUTO EXPAND: $yaml_capabilityautoexpand"
         message "NO LOG: $yaml_nolog"
         message "LOG FILE: $yaml_logfile"
         message "VERBOSE: $yaml_verbose"
@@ -246,15 +248,26 @@ function set_region {
 }
 
 function run_stack_command {
+    declare -a capabilities=()
+
     # Determine if IAM Capabilities are Required
     if [ "$yaml_capabilityiam" == "true" ]; then
-        capability_iam=" --capabilities CAPABILITY_IAM"
-    elif [ "$yaml_capabilitynamediam" == "true" ]; then
-        capability_iam=" --capabilities CAPABILITY_NAMED_IAM"
-    else
-        capability_iam=""
+        capabilities+=" CAPABILITY_IAM "
+    fi
+    if [ "$yaml_capabilitynamediam" == "true" ]; then
+        capabilities+=" CAPABILITY_NAMED_IAM "
     fi
 
+    # Determine if Auto Expand Capabilities are Required
+    if [ "$yaml_capabilityautoexpand" == "true" ]; then
+        capabilities+=" CAPABILITY_AUTO_EXPAND "
+    fi
+
+    if ! [ ${#capabilities[@]} -eq 0]; then
+      capability_iam="--capabilities ${capabilities[@]}"
+    else
+      capability_iam=""
+    fi
     show_header
 
     if [ "$yaml_uses3template" == "true" ]; then
