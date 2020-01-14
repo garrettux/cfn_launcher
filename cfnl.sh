@@ -263,7 +263,7 @@ function run_stack_command {
         capabilities+=" CAPABILITY_AUTO_EXPAND "
     fi
 
-    if ! [ ${#capabilities[@]} -eq 0]; then
+    if ! [ "${#capabilities[@]}" -eq 0 ]; then
       capability_iam="--capabilities ${capabilities[@]}"
     else
       capability_iam=""
