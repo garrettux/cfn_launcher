@@ -66,6 +66,7 @@ YAML Config File Format Example:
     parametersfilepath: /Users/gsm987/.cfnl/uswest2/client1/account1/dev/webapp1.json
     capabilityiam: false
     capabilitynamediam: false
+    capabilityautoexpand: false
     deletecreatefailures: true
     uses3template: true
     nolog: false
